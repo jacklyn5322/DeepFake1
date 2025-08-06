@@ -1,12 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <title>JCI 公民連署</title>
-  <!-- 字體 js 檔：已使用思源黑體 -->
-  <script src="font_shstc.js"></script>
+
+  <!-- 載入你轉換好的中文字型 -->
+  <script src="font.js"></script>
+
+  <!-- 載入 jsPDF 主程式 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     body {
       font-family: sans-serif;
@@ -36,17 +39,20 @@
 </head>
 <body>
   <h1>JCI 公民連署</h1>
+
   <form id="petitionForm">
     <label>您的姓名：<input type="text" name="name" required></label>
     <label>Email：<input type="email" name="email" required></label>
     <button type="submit">送出並下載專屬連署書</button>
   </form>
+
   <p id="result"></p>
 
   <script>
-    window.onload = function() {
+    window.onload = function () {
       const form = document.getElementById("petitionForm");
-      form.addEventListener("submit", async function(e) {
+
+      form.addEventListener("submit", function (e) {
         e.preventDefault();
         const name = form.name.value;
         const email = form.email.value;
@@ -54,7 +60,9 @@
         const jsPDF = window.jspdf.jsPDF;
         const doc = new jsPDF({ compress: false, unit: 'pt', format: 'a4' });
 
-        doc.setFont('SourceHanSansTC', 'normal');  // 使用思源黑體
+        // 套用你轉換出來的字體名稱（要與 font.js 中 addFont 的第二個參數一致）
+        doc.setFont("NotoSansTC", "normal");
+
         doc.setFontSize(20);
         doc.text("JCI 公民連署書", 40, 80);
 
