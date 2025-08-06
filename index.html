@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <title>JCI 公民連署</title>
+  <!-- 字體 js 檔（你需確保與 font.js 檔案在同一資料夾） -->
   <script src="font.js"></script>
+  <!-- jsPDF 主程式 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
@@ -43,32 +44,33 @@
   <p id="result"></p>
 
   <script>
-    document.getElementById("petitionForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const name = e.target.name.value;
-      const email = e.target.email.value;
+    window.onload = function() {
+      const form = document.getElementById("petitionForm");
+      form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const name = form.name.value;
+        const email = form.email.value;
 
-      generatePDF(name, email);
+        // 取得 jsPDF 類別
+        const jsPDF = window.jspdf.jsPDF;
+        const doc = new jsPDF({ compress: false, unit: 'pt', format: 'a4' });
 
-      document.getElementById("result").innerText = `感謝您，${name}，您的連署書已下載！`;
-    });
+        // 使用中文字型
+        doc.setFont('NotoSansTC', 'normal');
+        doc.setFontSize(20);
+        doc.text("JCI 公民連署書", 40, 80);
 
-    function generatePDF(name, email) {
-      const {{ jsPDF }} = window.jspdf;
-      const doc = new jsPDF({ compress: false, unit: 'pt', format: 'a4' });
+        doc.setFontSize(14);
+        doc.text(`連署人姓名：${name}`, 40, 130);
+        doc.text(`Email：${email}`, 40, 160);
+        doc.text("感謝您響應本次倡議，願意共同為社會帶來改變。", 40, 200);
 
-      doc.setFont('NotoSansTC', 'normal');
-      doc.setFontSize(20);
-      doc.text("JCI 公民連署書", 40, 80);
+        const fileName = `連署書_${name}.pdf`;
+        doc.save(fileName);
 
-      doc.setFontSize(14);
-      doc.text(`連署人姓名：${name}`, 40, 130);
-      doc.text(`Email：${email}`, 40, 160);
-      doc.text("感謝您響應本次倡議，願意共同為社會帶來改變。", 40, 200);
-
-      const fileName = `連署書_${name}.pdf`;
-      doc.save(fileName);
-    }
+        document.getElementById("result").innerText = `感謝您，${name}，您的連署書已下載！`;
+      });
+    };
   </script>
 </body>
 </html>
