@@ -1,0 +1,5 @@
+
+jsPDF.API.events.push(['addFonts', function() {
+  this.addFileToVFS('SourceHanSansTC-Regular.ttf', 'AAEAAAALAIAAAwAwT1MvMg8SAAACAAACkGhlYWQFAAAEAAAAMmhoZWEDAAADAAAACGhtdHgCAAACAAAAJGxvY2EAAgAOAAAAGG1heHAAAwAPAAAABG5hbWUAAwAQAAAAD3Bvc3QAAwASAAAACnByZXBoAAcAGAAAADZtYXR4AAgACAAAAARkZXNjAAkAGAAAAAZnYXNwAAsAHAAAAB9nbHlmAA0AIAA...');
+  this.addFont('SourceHanSansTC-Regular.ttf', 'SourceHanSansTC', 'normal');
+}]);
