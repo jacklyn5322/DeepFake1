@@ -3,80 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>JCI 公民連署</title>
-
-  <!-- 載入你轉換好的中文字型 -->
-  <script src="font.js"></script>
-
-  <!-- 載入 jsPDF 主程式 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: "Noto Sans TC", sans-serif;
       padding: 2rem;
       max-width: 600px;
       margin: auto;
-      background-color: #f9f9f9;
+      background-color: #f0f0f0;
     }
     input, button {
       width: 100%;
       padding: 0.75rem;
       margin-top: 1rem;
       font-size: 1rem;
-      box-sizing: border-box;
     }
-    h1 {
+    #card {
+      display: none;
+      background: white;
+      padding: 2rem;
+      margin-top: 2rem;
+      border: 2px solid #007ACC;
+      border-radius: 10px;
+      text-align: center;
+    }
+    #card h2 {
       color: #007ACC;
-      text-align: center;
     }
-    #result {
+    #downloadBtn {
+      display: none;
       margin-top: 1rem;
-      font-weight: bold;
-      color: green;
-      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1>JCI 公民連署</h1>
 
+  <h1>JCI 公民連署</h1>
   <form id="petitionForm">
     <label>您的姓名：<input type="text" name="name" required></label>
     <label>Email：<input type="email" name="email" required></label>
-    <button type="submit">送出並下載專屬連署書</button>
+    <button type="submit">產生連署卡</button>
   </form>
 
-  <p id="result"></p>
+  <div id="card">
+    <h2>JCI 公民連署書</h2>
+    <p>連署人姓名：<span id="cardName"></span></p>
+    <p>Email：<span id="cardEmail"></span></p>
+    <p>感謝您響應本次倡議，願意共同為社會帶來改變！</p>
+  </div>
+
+  <button id="downloadBtn">下載連署卡圖片</button>
 
   <script>
-    window.onload = function () {
-      const form = document.getElementById("petitionForm");
+    const form = document.getElementById("petitionForm");
+    const card = document.getElementById("card");
+    const btn = document.getElementById("downloadBtn");
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const name = form.name.value;
-        const email = form.email.value;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = form.name.value;
+      const email = form.email.value;
 
-        const jsPDF = window.jspdf.jsPDF;
-        const doc = new jsPDF({ compress: false, unit: 'pt', format: 'a4' });
+      document.getElementById("cardName").innerText = name;
+      document.getElementById("cardEmail").innerText = email;
 
-        // 套用你轉換出來的字體名稱（要與 font.js 中 addFont 的第二個參數一致）
-        doc.setFont("NotoSansTC", "normal");
+      card.style.display = "block";
+      btn.style.display = "inline-block";
+    });
 
-        doc.setFontSize(20);
-        doc.text("JCI 公民連署書", 40, 80);
-
-        doc.setFontSize(14);
-        doc.text(`連署人姓名：${name}`, 40, 130);
-        doc.text(`Email：${email}`, 40, 160);
-        doc.text("感謝您響應本次倡議，願意共同為社會帶來改變。", 40, 200);
-
-        const fileName = `連署書_${name}.pdf`;
-        doc.save(fileName);
-
-        document.getElementById("result").innerText = `感謝您，${name}，您的連署書已下載！`;
-      });
-    };
+    btn.addEventListener("click", async function () {
+      const canvas = await html2canvas(document.getElementById("card"));
+      const link = document.createElement("a");
+      link.download = "JCI_連署卡.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
   </script>
+
 </body>
 </html>
